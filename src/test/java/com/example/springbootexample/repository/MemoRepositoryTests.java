@@ -4,6 +4,9 @@ import com.example.springbootexample.entity.Memo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -21,7 +24,7 @@ public class MemoRepositoryTests {
 
             Optional<Memo> result = memoRepository.findById(mno);
             if(!result.isPresent()) {
-                Memo memo = Memo.builder().memoText("Sample..." + i).build();
+                Memo memo = Memo.builder().memoText("Sample..." + mno).build();
                 memoRepository.save(memo);
             }
         });
@@ -64,5 +67,26 @@ public class MemoRepositoryTests {
     public void testDelete(){
         Long mno =2L;
         memoRepository.deleteById(mno);
+    }
+
+    @Test
+    public void testPageDefault(){
+        Pageable pageable = PageRequest.of(0,10);
+        Page<Memo> result = memoRepository.findAll(pageable);
+
+        System.out.println(result);
+        System.out.println("------------------------------------");
+
+        System.out.println("Total Pages: "+ result.getTotalPages());
+        System.out.println("Total cout: " + result.getTotalElements());
+        System.out.println("Page Number: "+ result.getNumber());
+        System.out.println("Page Size: "+ result.getSize());
+        System.out.println("has next page?: "+result.hasNext());
+        System.out.println("first page?: "+result.isFirst());
+
+        System.out.println("------------------------------------");
+        for(Memo memo:result.getContent()){
+            System.out.println(memo);
+        }
     }
 }
