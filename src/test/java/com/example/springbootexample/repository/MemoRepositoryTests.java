@@ -94,8 +94,10 @@ public class MemoRepositoryTests {
     @Test
     public void testSort(){
         Sort sort1 = Sort.by("mno").descending();
+        Sort sort2 = Sort.by("memoText").ascending();
+        Sort sortAll =sort1.and(sort2);
 
-        Pageable pageable = PageRequest.of(0,10,sort1);
+        Pageable pageable = PageRequest.of(0,10,sortAll);
 
         Page<Memo> result = memoRepository.findAll(pageable);
 
