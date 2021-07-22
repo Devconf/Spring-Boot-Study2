@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -88,5 +89,18 @@ public class MemoRepositoryTests {
         for(Memo memo:result.getContent()){
             System.out.println(memo);
         }
+    }
+
+    @Test
+    public void testSort(){
+        Sort sort1 = Sort.by("mno").descending();
+
+        Pageable pageable = PageRequest.of(0,10,sort1);
+
+        Page<Memo> result = memoRepository.findAll(pageable);
+
+        result.get().forEach(memo -> {
+            System.out.println(memo);
+        });
     }
 }
