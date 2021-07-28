@@ -1,6 +1,6 @@
 package com.example.springbootexample.repository;
 
-import com.example.springbootexample.entity.Memo;
+import com.example.springbootexample.entity.BaseEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,13 +8,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
 @SpringBootTest
-public class MemoRepositoryTests {
+public class BaseEntityRepositoryTests {
     @Autowired
     MemoRepository memoRepository;
 
@@ -23,10 +25,10 @@ public class MemoRepositoryTests {
         IntStream.rangeClosed(1,100).forEach(i ->{
             Long mno = (long)i;
 
-            Optional<Memo> result = memoRepository.findById(mno);
+            Optional<BaseEntity> result = memoRepository.findById(mno);
             if(!result.isPresent()) {
-                Memo memo = Memo.builder().memoText("Sample..." + mno).build();
-                memoRepository.save(memo);
+                BaseEntity baseEntity = BaseEntity.builder().memoText("Sample..." + mno).build();
+                memoRepository.save(baseEntity);
             }
         });
     }
@@ -35,12 +37,12 @@ public class MemoRepositoryTests {
     public void testSelect(){
         Long mno = 101L;
 
-        Optional<Memo> result = memoRepository.findById(mno);
+        Optional<BaseEntity> result = memoRepository.findById(mno);
         System.out.println("==================================");
 
         if(result.isPresent()){
-            Memo memo = result.get();
-            System.out.println(memo);
+            BaseEntity baseEntity = result.get();
+            System.out.println(baseEntity);
         }
         else{
             System.out.println("해당 메모가 없습니다.");
@@ -52,16 +54,16 @@ public class MemoRepositoryTests {
     public void testSelect2(){
         Long mno = 100L;
 
-        Memo memo = memoRepository.getById(mno);
+        BaseEntity baseEntity = memoRepository.getById(mno);
         System.out.println("==================================");
 
-        System.out.println(memo);
+        System.out.println(baseEntity);
     }
 
     @Test
     public void testUpdate(){
-        Memo memo = Memo.builder().mno(1L).memoText("Update Text").build();
-        System.out.println(memoRepository.save(memo));
+        BaseEntity baseEntity = BaseEntity.builder().mno(1L).memoText("Update Text").build();
+        System.out.println(memoRepository.save(baseEntity));
     }
 
     @Test
@@ -73,7 +75,7 @@ public class MemoRepositoryTests {
     @Test
     public void testPageDefault(){
         Pageable pageable = PageRequest.of(0,10);
-        Page<Memo> result = memoRepository.findAll(pageable);
+        Page<BaseEntity> result = memoRepository.findAll(pageable);
 
         System.out.println(result);
         System.out.println("------------------------------------");
@@ -86,8 +88,8 @@ public class MemoRepositoryTests {
         System.out.println("first page?: "+result.isFirst());
 
         System.out.println("------------------------------------");
-        for(Memo memo:result.getContent()){
-            System.out.println(memo);
+        for(BaseEntity baseEntity :result.getContent()){
+            System.out.println(baseEntity);
         }
     }
 
@@ -99,10 +101,34 @@ public class MemoRepositoryTests {
 
         Pageable pageable = PageRequest.of(0,10,sortAll);
 
-        Page<Memo> result = memoRepository.findAll(pageable);
+        Page<BaseEntity> result = memoRepository.findAll(pageable);
 
-        result.get().forEach(memo -> {
-            System.out.println(memo);
+        result.get().forEach(baseEntity -> {
+            System.out.println(baseEntity);
         });
+    }
+
+    @Test
+    public void testQueryMethods(){
+        List<BaseEntity> list = memoRepository.findByMnoBetweenOrderByMnoDesc(60L,80L);
+        for(BaseEntity baseEntity :list){
+            System.out.println(baseEntity);
+        }
+    }
+
+    @Test
+    public void testQueryMethodWithPageable(){
+        Pageable pageable = PageRequest.of(0,10,Sort.by("mno").descending());
+        Page<BaseEntity> result = memoRepository.findByMnoBetween(10L, 50L, pageable);
+        result.get().forEach(baseEntity -> {
+            System.out.println(baseEntity);
+        });
+    }
+
+    @Commit
+    @Transactional
+    @Test
+    public void testDeleteQueryMethod(){
+        memoRepository.deleteMemoByMnoLessThan(10L);
     }
 }
