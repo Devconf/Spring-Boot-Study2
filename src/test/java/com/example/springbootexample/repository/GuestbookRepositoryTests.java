@@ -37,16 +37,17 @@ public class GuestbookRepositoryTests {
     }
 
     @Test
-    public void updateTest(){
-        Optional<GuestBook> result= guestBookRepository.findById(300L);
-        if(result.isPresent()){
-            GuestBook guestBook= result.get();
+    public void updateTest() {
+        Optional<GuestBook> result = guestBookRepository.findById(300L);
+        if (result.isPresent()) {
+            GuestBook guestBook = result.get();
             guestBook.changeTitle("Change Title....");
             guestBook.changeContent("Change Content....");
 
             guestBookRepository.save(guestBook);
         }
     }
+
 
     @Test
     public void testQuery1(){

@@ -1,75 +1,80 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
-  <th:block th:fragment="content">
-    <<h1 class="mt-4">GuestBook Read Page</h1>
+    <th:block th:fragment="content">
+        <<h1 class="mt-4">GuestBook Read Page</h1>
 
-    <form id="form" action="/guestbook/modify" method="post">
+        <form action="/guestbook/modify" id="form" method="post">
 
-      <!--페이지 번호-->
-      <input id="page" type="hidden" name="page" th:value="${requestDTO.page}">
-      <div class="form-group">
-        <label>Gno</label>
-        <input type="text" class="form-control" name="gno" th:value="${dto.gno}" readonly>
-      </div>
-      <div class="form-group">
-        <label>Title</label>
-        <input type="text" class="form-control" name="title" th:value="${dto.title}">
-      </div>
-      <div class="form-group">
-        <label>Content</label>
-        <textarea class="form-control" rows="5" name="content">[[${dto.content}]]</textarea>
-      </div>
-      <div class="form-group">
-        <label>Writer</label>
-        <input type="text" class="form-control" name="writer" th:value="${dto.writer}" readonly>
-      </div>
-      <div class="form-group">
-        <label>RegDate</label>
-        <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate,'yyy/MM/HH:mm:ss')}" readonly>
-      </div>
-      <div class="form-group">
-        <label>ModDate</label>
-        <input type="text" class="form-control" th:value= "${#temporals.format(dto.modDate,'yyy/MM/HH:mm:ss')}" readonly>
-      </div>
-    </form>
+            <!--페이지 번호-->
+            <input id="page" name="page" th:value="${requestDTO.page}" type="hidden">
+            <input id="type" name="type" th:value="${requestDTO.type}" type="hidden">
+            <input id="keyword" name="keyword" th:value="${requestDTO.keyword}" type="hidden">
 
-    <button type="button" class="btn btn-primary" id="modifyBtn">Modify</button>
-    <button type="button" class="btn btn-info" id="listBtn">List</button>
-    <button type="button" class="btn btn-danger" id="removeBtn">Remove</button>
+            <div class="form-group">
+                <label>Gno</label>
+                <input class="form-control" name="gno" readonly th:value="${dto.gno}" type="text">
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input class="form-control" name="title" th:value="${dto.title}" type="text">
+            </div>
+            <div class="form-group">
+                <label>Content</label>
+                <textarea class="form-control" name="content" rows="5">[[${dto.content}]]</textarea>
+            </div>
+            <div class="form-group">
+                <label>Writer</label>
+                <input class="form-control" name="writer" readonly th:value="${dto.writer}" type="text">
+            </div>
+            <div class="form-group">
+                <label>RegDate</label>
+                <input class="form-control" readonly th:value="${#temporals.format(dto.regDate,'yyy/MM/HH:mm:ss')}"
+                       type="text">
+            </div>
+            <div class="form-group">
+                <label>ModDate</label>
+                <input class="form-control" readonly th:value="${#temporals.format(dto.modDate,'yyy/MM/HH:mm:ss')}"
+                       type="text">
+            </div>
+        </form>
 
-    <script th:inline="javascript">
+        <button class="btn btn-primary" id="modifyBtn" type="button">Modify</button>
+        <button class="btn btn-info" id="listBtn" type="button">List</button>
+        <button class="btn btn-danger" id="removeBtn" type="button">Remove</button>
 
-      var  form = document.getElementById("form");
-      var page = document.getElementById("page");
-      document.getElementById("modifyBtn").addEventListener('click',function (){
-        if(!confirm("수정하시겠습니까?")){
-          return;
-        }
+        <script th:inline="javascript">
 
-        form.setAttribute("action","/guestbook/modify");
-        form.setAttribute("method","post");
+            var form = document.getElementById("form");
+            var page = document.getElementById("page");
+            document.getElementById("modifyBtn").addEventListener('click', function () {
+                if (!confirm("수정하시겠습니까?")) {
+                    return;
+                }
 
-        document.forms["form"].submit();
-      });
+                form.setAttribute("action", "/guestbook/modify");
+                form.setAttribute("method", "post");
 
-      document.getElementById("removeBtn").addEventListener('click',function (){
+                document.forms["form"].submit();
+            });
 
-        form.setAttribute("action","/guestbook/remove");
-        form.setAttribute("method","post");
+            document.getElementById("removeBtn").addEventListener('click', function () {
 
-        document.forms["form"].submit();
-      });
+                form.setAttribute("action", "/guestbook/remove");
+                form.setAttribute("method", "post");
 
-      document.getElementById("listBtn").addEventListener('click',function (){
+                document.forms["form"].submit();
+            });
 
-        form.append(page);
-        form.setAttribute("action","/guestbook/list");
-        form.setAttribute("method","get");
+            document.getElementById("listBtn").addEventListener('click', function () {
 
-        document.forms["form"].submit();
-      });
-    </script>
-  </th:block>
+                form.append(page);
+                form.setAttribute("action", "/guestbook/list");
+                form.setAttribute("method", "get");
+
+                document.forms["form"].submit();
+            });
+        </script>
+    </th:block>
 
 </th:block>

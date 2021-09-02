@@ -42,4 +42,30 @@ public class GuestbookServiceTests {
         System.out.println("==================================");
         resultDTO.getPageList().forEach(i-> System.out.println(i));
     }
+
+    @Test
+    public void testSearch(){
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(1)
+                .size(10)
+                .type("tc")
+                .keyword("김현식")
+                .build();
+
+        PageResultDTO<GuestbookDTO,GuestBook> resultDTO = guestbookService.getList(pageRequestDTO);
+
+        System.out.println("PREV: "+ resultDTO.isPrev());
+        System.out.println("NEXT: "+ resultDTO.isNext());
+        System.out.println("TOTAL: "+ resultDTO.getTotalPage());
+
+        System.out.println("________________________________________");
+        for(GuestbookDTO guestbookDTO: resultDTO.getDtoList()){
+            System.out.println(guestbookDTO);
+        }
+
+        System.out.println("=========================================");
+        resultDTO.getPageList().forEach(i ->{
+            System.out.println(i);
+        });
+    }
 }
