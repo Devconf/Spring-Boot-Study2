@@ -5,6 +5,7 @@ import com.example.springbootexample.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -15,18 +16,19 @@ public class BoardRepositoryTest {
     private BoardRepository boardRepository;
 
     @Test
-    public void insertBoard(){
-        IntStream.rangeClosed(1,100).forEach(i->{
-            Member member = Member.builder().email("user"+i+"@aaa.com").build();
+    public void insertBoard() {
+        IntStream.rangeClosed(1, 100).forEach(i -> {
+            Member member = Member.builder().email("user" + i + "@aaa.com").build();
 
-            Board board = Board.builder().title("Title..."+i).content("Content..."+i).writer(member).build();
+            Board board = Board.builder().title("Title..." + i).content("Content..." + i).writer(member).build();
 
             boardRepository.save(board);
         });
     }
 
+    @Transactional
     @Test
-    public void testRead1(){
+    public void testRead1() {
         Optional<Board> result = boardRepository.findById(100L);
 
         Board board = result.get();

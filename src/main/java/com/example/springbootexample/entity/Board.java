@@ -9,8 +9,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
-public class Board extends BaseEntity{
+@ToString(exclude = "writer")
+public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bno;
@@ -19,6 +19,6 @@ public class Board extends BaseEntity{
 
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member writer; //연관관계 지정
 }
