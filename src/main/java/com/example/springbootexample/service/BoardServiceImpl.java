@@ -62,4 +62,17 @@ public class BoardServiceImpl implements BoardService {
         replyRepository.deleteByBno(bno);
         repository.deleteById(bno);
     }
+
+    @Transactional
+    @Override
+    public void modify(BoardDTO boardDTO) {
+        Board board = repository.getById(boardDTO.getBno()); //getById는 프록시 레퍼런스를 반환한다.
+
+        System.out.println("========= Select Query Before =========");
+        board.changeTitle(boardDTO.getTitle());
+        System.out.println("========= Select Query Done =========");
+        board.changeContent(boardDTO.getContent());
+
+        repository.save(board);
+    }
 }
