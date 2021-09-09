@@ -1,6 +1,8 @@
 package com.example.springbootexample.service;
 
 import com.example.springbootexample.dto.BoardDTO;
+import com.example.springbootexample.dto.PageRequestDTO;
+import com.example.springbootexample.dto.PageResultDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +14,7 @@ public class BoardServiceTests {
     private BoardService boardService;
 
     @Test
-    public void testRegister(){
+    public void testRegister() {
         BoardDTO dto = BoardDTO.builder()
                 .title("Test.")
                 .content("Test...")
@@ -20,5 +22,24 @@ public class BoardServiceTests {
                 .build();
 
         Long bno = boardService.register(dto);
+    }
+
+    @Test
+    public void testList() {
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+
+        PageResultDTO<BoardDTO, Object[]> result = boardService.getList(pageRequestDTO);
+
+        for (BoardDTO boardDTO : result.getDtoList()) {
+            System.out.println(boardDTO);
+        }
+    }
+
+    @Test
+    public void testGet() {
+        Long bno = 100L;
+        BoardDTO boardDTO = boardService.get(bno);
+
+        System.out.println(boardDTO);
     }
 }
