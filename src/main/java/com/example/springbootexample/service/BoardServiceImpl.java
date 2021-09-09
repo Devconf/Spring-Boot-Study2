@@ -6,10 +6,12 @@ import com.example.springbootexample.dto.PageResultDTO;
 import com.example.springbootexample.entity.Board;
 import com.example.springbootexample.entity.Member;
 import com.example.springbootexample.repository.BoardRepository;
+import com.example.springbootexample.repository.ReplyRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Function;
 
@@ -17,9 +19,11 @@ import java.util.function.Function;
 @Log4j2
 public class BoardServiceImpl implements BoardService {
     private BoardRepository repository;
+    private ReplyRepository replyRepository;
 
-    public BoardServiceImpl(BoardRepository boardRepository) {
+    public BoardServiceImpl(BoardRepository boardRepository, ReplyRepository replyRepository) {
         this.repository = boardRepository;
+        this.replyRepository = replyRepository;
     }
 
     @Override
@@ -52,5 +56,10 @@ public class BoardServiceImpl implements BoardService {
         return entityToDTO((Board) arr[0], (Member) arr[1], (Long) arr[2]);
     }
 
-    ;
+    @Transactional
+    @Override
+    public void removeWithReplies(Long bno) {
+        replyRepository.deleteByBno(bno);
+        repository.deleteById(bno);
+    }
 }
